@@ -1,0 +1,41 @@
+services:
+  mongodb:
+    image: 'mongo:latest'
+    container_name: mongodb
+    environment:
+      - 'MONGO_INITDB_DATABASE=shopping'
+      - 'MONGO_INITDB_ROOT_PASSWORD=donald'
+      - 'MONGO_INITDB_ROOT_USERNAME=root'
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./dbdata:/data/db
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    #restart: always
+    ports:
+      - '8081:8081'
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: donald
+      ME_CONFIG_MONGODB_URL: mongodb://root:donald@mongodb:27017/
+      ME_CONFIG_BASICAUTH: false
+    depends_on:
+      - mongodb
+  postgres:
+    image: 'postgres'
+    container_name: postgres1
+    environment:
+      - 'POSTGRES_DB=shopping'
+      - 'POSTGRES_PASSWORD=donald'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - postgresql_data:/var/lib/postgresql/data
+volumes:
+  postgresql:
+  postgresql_data:
+  dbdata:
